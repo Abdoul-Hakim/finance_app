@@ -1,0 +1,29 @@
+:host {
+  height: 100%;
+  width: 100%;
+
+  div:first-child {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  h1 {
+    margin-bottom: 100px;
+    text-align: center;
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .btn-container button:first-child {
+    margin-bottom: 15px;
+  }
+}
