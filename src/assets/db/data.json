@@ -1,0 +1,20 @@
+{
+  "expense": [
+    {
+      "id": 1,
+      "expenseType": 1,
+      "value": 3,
+      "comment": "",
+      "tCreated": 139399390
+    }
+  ],
+  "income": [
+    {
+      "id": 1,
+      "incomeType": 1,
+      "value": 3,
+      "comment": "",
+      "tCreated": 139399390
+    }
+  ]
+}
