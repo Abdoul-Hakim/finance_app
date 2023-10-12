@@ -1,5 +1,44 @@
-<p>overview works!</p>
-<form>
-  <input type="text" formControlName="test" />
-  <button type="button" >Go</button>
-</form>
+<!-- Header -->
+<div class="container-xl text-center pt-5">
+  <div class="col">
+    <p>Current Balance</p>
+    <h2>{{ currentBalance | currency: 'USD' }}</h2>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p>Income</p>
+      <h2 class="text-success">{{ incomeSum | currency: 'USD'}}</h2>
+    </div>
+    <div class="col">
+      <p>Expenses</p>
+      <h2 class="text-danger">{{ expenseSum | currency: 'USD'}}</h2>
+    </div>
+  </div>
+</div>
+
+<!-- Income and Expenses Table-->
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Amount</th>
+        <th scope="col">Date</th>
+        <th scope="col">Comment</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      <tr *ngFor="let item of dataList">
+        <td [class.text-success]="item.expenseType == undefined" [class.text-danger]="item.incomeType == undefined">{{ item.value | currency: 'USD' }}</td>
+        <td>{{ item.tCreated * 1000 | date: "dd/MM/YYYY" }}</td>
+        <td>{{ item.comment }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Action Button -->
+<div class="container-xl align-center">
+  <div class="row align-items-center p-2">
+    <button class="btn btn-outline-success fs-3">+</button>
+    <button class="btn btn-outline-danger fs-3 mt-2">-</button>
+  </div>
+</div>
