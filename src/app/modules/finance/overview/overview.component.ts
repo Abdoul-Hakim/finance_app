@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Income } from '../interfaces/Income';
 import { Expense } from '../interfaces/expense';
-import { TestExpense, TestIncome } from 'test/data';
+import { IncomeService } from '../service/income.service';
+import { ExpenseService } from '../service/expense.service';
 
 
 @Component({
@@ -11,42 +12,66 @@ import { TestExpense, TestIncome } from 'test/data';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent {
-  public test = new FormControl('');
   public currentBalance: number = 0;
-  public incomeDataList: Array<Income> = [];
-  public expenseDataList: Array<Expense> = [];
   public expenseSum: number = 0;
   public incomeSum: number = 0;
+  public dataList: Array<any> = [];
+
+  constructor(
+    private incomeProvider: IncomeService,
+    private expenseProvider: ExpenseService,
+  ) {}
 
   ngOnInit(): void {
-    this.incomeDataList = TestIncome;
-    this.expenseDataList = TestExpense;
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.InitFinanceHeader();
-
   }
 
    InitFinanceHeader() {
-    this.expenseSum = this.CalculateExpenses();
-    this.incomeSum = this.CalculateIncome();
-    this.currentBalance = this.CalculateCurrentBalace();
+    this.prepareExpenses();
+    this.prepareIncome();
   }
 
-  CalculateCurrentBalace(tBegin: number = 0, tEnd: number = 0): number {
-    if (tBegin === 0 && tEnd === 0) {
-      return this.incomeSum - this.expenseSum;
+  prepareExpenses() {
+    //TODO this.expenseProvider.getExpense();
+    this.expenseProvider.calculateExpense();
+    this.expenseProvider.expenseSum.subscribe(newValue => {
+      console.log(newValue);
+      this.expenseSum = newValue;
+      this.currentBalance = this.incomeSum - this.expenseSum;
+    });
+
+    this.expenseProvider.currentExpense.subscribe(newData => {
+      // get income and add expenses to the new list
+      this.dataList = this.incomeProvider.currentIncome.value;
+      this.dataList = this.dataList.concat(newData).sort((a, b) => b.tCreated - a.tCreated);
+    });
+
+    //this.expenseProvider.expenseSum.next(4)
+
+  }
+
+  prepareIncome() {
+    // prepare income
+    //TODO this.incomeProvider.getExpense();
+    this.incomeProvider.calculateIncome();
+    this.incomeProvider.incomeSum.subscribe(newValue => {
+      this.incomeSum = newValue;
+      this.currentBalance = this.incomeSum - this.expenseSum;
+    });
+
+    this.incomeProvider.currentIncome.subscribe(newData => {
+      // get expenses and add income to the new list
+      this.dataList = this.expenseProvider.currentExpense.value;
+      this.dataList = this.dataList.concat(newData).sort((a, b) => b.tCreated - a.tCreated);
+    });
+
+  }
+
+  checkProp(value:any) {
+    if (value.expenseType == undefined ) {
+      return true;
     }
-    return 0;
+    return false;
   }
-
-  CalculateIncome(tBegin: number = 0, tEnd: number = 0): number {
-    return this.incomeDataList.reduce((accumulator, currentValue: Income) => accumulator + currentValue.value, 0);
-  }
-
-  CalculateExpenses(tBegin: number = 0, tEnd: number = 0): number {
-    return this.expenseDataList.reduce((accumulator, currentValue: Expense) => accumulator + currentValue.value, 0);
-  }
-
 }
 
