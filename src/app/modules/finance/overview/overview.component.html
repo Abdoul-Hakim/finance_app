@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr *ngFor="let item of dataList">
+      <tr *ngFor="let item of dataList" class="class">
         <td [class.text-success]="item.expenseType == undefined" [class.text-danger]="item.incomeType == undefined">{{ item.value | currency: 'USD' }}</td>
         <td>{{ item.tCreated * 1000 | date: "dd/MM/YYYY" }}</td>
         <td>{{ item.comment }}</td>
@@ -38,7 +38,27 @@
 <!-- Action Button -->
 <div class="container-xl align-center">
   <div class="row align-items-center p-2">
-    <button class="btn btn-outline-success fs-3">+</button>
-    <button class="btn btn-outline-danger fs-3 mt-2">-</button>
+    <button class="btn btn-outline-success fs-3" (click)="setOverlayBit(true)">+</button>
+    <button class="btn btn-outline-danger fs-3 mt-2" (click)="setOverlayBit(true)">-</button>
   </div>
+</div>
+<!-- Create new entry-->
+<div class="overlay container" *ngIf="overlayActive == true">
+  <form>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-secondary" (click)="setOverlayBit(false)">Cancel</button>
+        <p>New Entry</p>
+        <button type="submit" class="btn btn-primary" (click)="addNewEntry()">Add</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <input class="form-control" type="number" name="" id="">
+        <input class="form-control" type="date" name="" id="">
+        <textarea class="form-control" name="" id="" cols="30" rows="10"></textarea>
+      </div>
+    </div>
+  </form>
+
 </div>

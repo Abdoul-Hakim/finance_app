@@ -16,6 +16,7 @@ export class OverviewComponent {
   public expenseSum: number = 0;
   public incomeSum: number = 0;
   public dataList: Array<any> = [];
+  public overlayActive: boolean = false;
 
   constructor(
     private incomeProvider: IncomeService,
@@ -72,6 +73,14 @@ export class OverviewComponent {
       return true;
     }
     return false;
+  }
+
+  setOverlayBit(newValue: boolean) {
+    this.overlayActive = newValue;
+  }
+
+  addNewEntry() {
+    this.setOverlayBit(false);
   }
 }
 
