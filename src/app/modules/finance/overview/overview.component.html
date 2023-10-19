@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr *ngFor="let item of dataList" class="class">
+      <tr *ngFor="let item of dataList" (click)="openOverlay(true, item.id, item.expenseType == undefined ? 0 : 1)" class="class">
         <td [class.text-success]="item.expenseType == undefined" [class.text-danger]="item.incomeType == undefined">{{ item.value | currency: 'USD' }}</td>
         <td>{{ item.tCreated * 1000 | date: "dd/MM/YYYY" }}</td>
         <td>{{ item.comment }}</td>
@@ -38,67 +38,15 @@
 <!-- Action Button -->
 <div class="container-xl z-1 align-center bg-light-subtle sticky-bottom">
   <div class="row align-items-center p-2">
-    <button type="button" class="btn btn-success fs-3" (click)="setOverlayBit(true)">
+    <button type="button" class="btn btn-success fs-3" (click)="openOverlay(true, 0, 0)">
       <i class="bi bi-arrow-left-right"></i>
     </button>
   </div>
 </div>
-<!-- Create new entry-->
-<div class="overlay container z-3 position-absolute bg-secondary-subtle" *ngIf="overlayActive == true">
-  <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
-    <!-- Header -->
-    <div class="row pt-3 align-items-center">
-      <div class="col">
-        <button type="button" class="btn btn-secondary" (click)="setOverlayBit(false)">Cancel</button>
-      </div>
-      <div class="col">
-        <h4 class="m-0 text-center">New Entry</h4>
-      </div>
-      <div class="col d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary" (submit)="addNewEntry()">Add</button>
-      </div>
-    </div>
-    <!-- Form body: Input -->
-    <div class="row pt-4">
-      <div class="col">
-        <div class="row align-items-center">
-          <!-- Value -->
-          <div class="col">
-            <input formControlName="value" placeholder="Value" class="form-control mt-3" type="number" >
-          </div>
-          <!-- Currency -->
-          <div class="col">
-            <div class="form-floating mt-3">
-              <select formControlName="currency" class="form-select" id="floatingSelect0" aria-label="Floating label select example">
-                <option selected value="0">Dollar</option>
-                <option value="1">Riel</option>
-              </select>
-              <label for="floatingSelect0">Currency</label>
-            </div>
-          </div>
-        </div>
-        <!-- Date -->
-        <input formControlName="date" class="form-control mt-3" type="date">
-        <!-- Type of Entry -->
-        <div class="form-floating mt-3">
-          <select formControlName="entryType" class="form-select" id="floatingSelect1" aria-label="Floating label select example">
-            <option selected value="0">Income</option>
-            <option value="1">Expense</option>
-          </select>
-          <label for="floatingSelect1">Type of Entry</label>
-        </div>
-        <!-- Entry type category -->
-        <div class="form-floating mt-3">
-          <select formControlName="entryTypeCategory" class="form-select" id="floatingSelect2" aria-label="Floating label select example">
-            <option selected value="-1">None</option>
-            <option *ngFor="let item of entryTypeCategoryList; let i = index" value="i">{{ item }}</option>
-          </select>
-          <label for="floatingSelect2">{{ displayTextTypeCategory }}</label>
-        </div>
-        <!-- Comment-->
-        <textarea formControlName="comment" placeholder="Comment" class="form-control mt-3"  cols="30" rows="10"></textarea>
-      </div>
-    </div>
-  </form>
 
-</div>
+<app-entry-overlay
+  [overlayActive]="overlayActive"
+  (overlayVisibilityChanged)="overlayActive=$event"
+  [entryId]="entryId"
+  [entryType]="entryType"
+></app-entry-overlay>

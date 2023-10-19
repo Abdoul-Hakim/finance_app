@@ -1,0 +1,77 @@
+
+<!-- Create new entry-->
+<div class="overlay container z-3 position-absolute bg-secondary-subtle" *ngIf="overlayActive == true">
+  <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+    <!-- Header -->
+    <div class="row pt-3 align-items-center">
+      <div class="col">
+        <button type="button" class="btn btn-secondary" (click)="setOverlayBit(false)">Cancel</button>
+      </div>
+      <div class="col">
+        <h4 class="m-0 text-center">
+          {{ entryId == 0 ? 'New Entry' :  currentEntry.tCreated * 1000 | date: "dd/MM/YYYY" }}
+        </h4>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary" (submit)="submitEntry()">Add</button>
+      </div>
+    </div>
+    <!-- Form body: Input -->
+    <div class="row pt-4">
+      <div class="col">
+        <div class="row">
+          <!-- Value -->
+          <div class="col">
+            <input formControlName="value" placeholder="Value" class="form-control mt-3" type="number" >
+          </div>
+          <!-- Currency -->
+          <div class="col" *ngIf="entryId == 0">
+            <div class="form-floating mt-3">
+              <select formControlName="currency" class="form-select" id="floatingSelect0" aria-label="Floating label select example">
+                <option selected value="0">Dollar</option>
+                <option value="1">Riel</option>
+              </select>
+              <label for="floatingSelect0">Currency</label>
+            </div>
+          </div>
+          <div  *ngIf="entryId != 0" class="col d-flex align-items-center justify-content-center">
+            <p class="text-center">USD</p>
+          </div>
+        </div>
+        <!-- Date -->
+        <input formControlName="date" class="form-control mt-3" type="date">
+        <!-- Type of Entry -->
+        <div class="form-floating mt-3" *ngIf="entryId == 0">
+          <select formControlName="entryType" class="form-select" id="floatingSelect1" aria-label="Floating label select example">
+            <option selected value="0">Income</option>
+            <option value="1">Expense</option>
+          </select>
+          <label for="floatingSelect1">Type of Entry</label>
+        </div>
+        <div *ngIf="entryId != 0" class="text-right mt-3">
+          <p>
+           Type: {{ entryTypeList[entryType] }}
+          </p>
+        </div>
+        <div *ngIf="entryId != 0" class="text-right">
+          <p>
+            Category: {{ currentEntry.expenseType ? expenseTypeList[currentEntry.expenseType] : incomeTypeList[currentEntry.incomeType] }}
+           </p>
+        </div>
+        <!-- Entry type category -->
+        <div class="form-floating mt-3" *ngIf="entryId == 0">
+          <select formControlName="entryTypeCategory" class="form-select" id="floatingSelect2" aria-label="Floating label select example">
+            <option selected value="-1">None</option>
+            <option *ngFor="let item of entryTypeCategoryList; let i = index" value="i">{{ item }}</option>
+          </select>
+          <label for="floatingSelect2">{{ displayTextTypeCategory }}</label>
+        </div>
+        <!-- Comment-->
+        <textarea formControlName="comment" placeholder="Comment" class="form-control mt-3"  cols="30" rows="10"></textarea>
+      </div>
+    </div>
+    <div class="container mt-3">
+          <button  *ngIf="entryId != 0" class="btn btn-delete btn-danger">Delete</button>
+    </div>
+  </form>
+</div>

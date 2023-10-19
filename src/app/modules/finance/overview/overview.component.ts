@@ -5,6 +5,7 @@ import { ExpenseService } from '../service/expense.service';
 import { EntryType } from '../enums/entry_type';
 import { Currency } from '../enums/currency';
 import { USD2KHR } from '../const/convertion_rate';
+import { objectEnumNames } from '@prisma/client/runtime/library';
 
 
 @Component({
@@ -18,19 +19,8 @@ export class OverviewComponent {
   public incomeSum: number = 0;
   public dataList: Array<any> = [];
   public overlayActive: boolean = false;
-  private expenseTypeList: Array<string> = ['accomodation', 'food', 'extra'];
-  private incomeTypeList: Array<string> = ['salary', 'pedium', 'savings'];
-  public entryTypeCategoryList: Array<string> = [];
-  public displayTextTypeCategory: string = 'Income type';
-
-  public entryForm = new FormGroup({
-    value: new FormControl(0),
-    currency: new FormControl(0),
-    date: new FormControl((new Date().toISOString().substring(0, 10))),
-    entryType: new FormControl(0),
-    entryTypeCategory: new FormControl(0),
-    comment: new FormControl('')
-  });
+  public entryId: number = 0;
+  public entryType: number = 0;
 
   constructor(
     private incomeProvider: IncomeService,
@@ -39,7 +29,6 @@ export class OverviewComponent {
 
   ngOnInit(): void {
     this.InitFinanceHeader();
-    this.initForm();
   }
 
    InitFinanceHeader() {
@@ -86,63 +75,13 @@ export class OverviewComponent {
     return false;
   }
 
-  setOverlayBit(newValue: boolean) {
+  openOverlay(newValue: boolean, objectId: number, entryType: number) {
+    console.log(this.overlayActive)
     this.overlayActive = newValue;
+    this.entryId = objectId;
+    this.entryType = entryType;
+    console.log(newValue, objectId)
   }
 
-  addNewEntry() {
-    this.setOverlayBit(false);
-  }
-
-  initForm() {
-    this.entryTypeCategoryList = this.incomeTypeList;
-    // change type category dropdown
-    this.entryForm.controls.entryType.valueChanges.subscribe((newValue) => {
-      // entry type income
-      if (newValue == EntryType.Income) {
-        this.entryTypeCategoryList = this.incomeTypeList;
-        this.displayTextTypeCategory = 'Income type';
-      } else { // entry type expense
-        this.entryTypeCategoryList = this.expenseTypeList;
-        this.displayTextTypeCategory = 'Expense type';
-      }
-    });
-  }
-
-  onSubmit() {
-    let realValue = this.entryForm.value.value ? this.entryForm.value.value : 0;
-    // calculate the real value
-    if (this.entryForm.value.currency == Currency.KHR) {
-      realValue = realValue / USD2KHR;
-    }
-    let newObject;
-    if (this.entryForm.value.entryType == EntryType.Income) {
-      newObject = {
-        id: 0,
-        incomeType: this.entryForm.value.entryTypeCategory ? this.entryForm.value.entryTypeCategory : 0,
-        value: realValue,
-        comment: this.entryForm.value.comment ? this.entryForm.value.comment : '',
-        tCreated: this.entryForm.value.date ?
-        new Date(this.entryForm.value.date).getTime() / 1000 : 0
-      }
-      newObject.value = realValue;
-      this.incomeProvider.createIncome(newObject);
-    } else {
-      newObject = {
-        id: 0,
-        expenseType: this.entryForm.value.entryTypeCategory ? this.entryForm.value.entryTypeCategory : 0,
-        value: realValue,
-        comment: this.entryForm.value.comment ? this.entryForm.value.comment : '',
-        tCreated: this.entryForm.value.date ?
-        new Date(this.entryForm.value.date).getTime() / 1000 : 0
-      }
-      newObject.value = realValue;
-      this.expenseProvider.createExpense(newObject);
-    }
-
-    this.incomeProvider.calculateIncome();
-    this.expenseProvider.calculateExpense();
-    this.setOverlayBit(false);
-  }
 }
 
