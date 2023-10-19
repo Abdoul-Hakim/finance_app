@@ -1,5 +1,5 @@
 <!-- Header -->
-<div class="container-xl text-center pt-5">
+<div class="container-xl text-center pt-5 bg-light-subtle">
   <div class="col">
     <p>Current Balance</p>
     <h2>{{ currentBalance | currency: 'USD' }}</h2>
@@ -17,7 +17,7 @@
 </div>
 
 <!-- Income and Expenses Table-->
-<div class="table-responsive">
+<div class="table-responsive mh-600 z-1 sticky-top overflow-y-auto">
   <table class="table">
     <thead>
       <tr>
@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr *ngFor="let item of dataList">
+      <tr *ngFor="let item of dataList" (click)="openOverlay(true, item.id, item.expenseType == undefined ? 0 : 1)" class="class">
         <td [class.text-success]="item.expenseType == undefined" [class.text-danger]="item.incomeType == undefined">{{ item.value | currency: 'USD' }}</td>
         <td>{{ item.tCreated * 1000 | date: "dd/MM/YYYY" }}</td>
         <td>{{ item.comment }}</td>
@@ -36,9 +36,17 @@
   </table>
 </div>
 <!-- Action Button -->
-<div class="container-xl align-center">
+<div class="container-xl z-1 align-center bg-light-subtle sticky-bottom">
   <div class="row align-items-center p-2">
-    <button class="btn btn-outline-success fs-3">+</button>
-    <button class="btn btn-outline-danger fs-3 mt-2">-</button>
+    <button type="button" class="btn btn-success fs-3" (click)="openOverlay(true, 0, 0)">
+      <i class="bi bi-arrow-left-right"></i>
+    </button>
   </div>
 </div>
+
+<app-entry-overlay
+  [overlayActive]="overlayActive"
+  (overlayVisibilityChanged)="overlayActive=$event"
+  [entryId]="entryId"
+  [entryType]="entryType"
+></app-entry-overlay>

@@ -1,5 +1,5 @@
 export enum ExpenseType {
-  accomodation = 1,
-  food = 2,
-  extra = 3
+  accomodation = 0,
+  food = 1,
+  extra = 2
 };

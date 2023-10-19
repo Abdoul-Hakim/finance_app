@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Income } from '../interfaces/Income';
-import { Expense } from '../interfaces/expense';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IncomeService } from '../service/income.service';
 import { ExpenseService } from '../service/expense.service';
+import { EntryType } from '../enums/entry_type';
+import { Currency } from '../enums/currency';
+import { USD2KHR } from '../const/convertion_rate';
+import { objectEnumNames } from '@prisma/client/runtime/library';
 
 
 @Component({
@@ -16,6 +18,9 @@ export class OverviewComponent {
   public expenseSum: number = 0;
   public incomeSum: number = 0;
   public dataList: Array<any> = [];
+  public overlayActive: boolean = false;
+  public entryId: number = 0;
+  public entryType: number = 0;
 
   constructor(
     private incomeProvider: IncomeService,
@@ -35,7 +40,6 @@ export class OverviewComponent {
     //TODO this.expenseProvider.getExpense();
     this.expenseProvider.calculateExpense();
     this.expenseProvider.expenseSum.subscribe(newValue => {
-      console.log(newValue);
       this.expenseSum = newValue;
       this.currentBalance = this.incomeSum - this.expenseSum;
     });
@@ -45,9 +49,6 @@ export class OverviewComponent {
       this.dataList = this.incomeProvider.currentIncome.value;
       this.dataList = this.dataList.concat(newData).sort((a, b) => b.tCreated - a.tCreated);
     });
-
-    //this.expenseProvider.expenseSum.next(4)
-
   }
 
   prepareIncome() {
@@ -73,5 +74,14 @@ export class OverviewComponent {
     }
     return false;
   }
+
+  openOverlay(newValue: boolean, objectId: number, entryType: number) {
+    console.log(this.overlayActive)
+    this.overlayActive = newValue;
+    this.entryId = objectId;
+    this.entryType = entryType;
+    console.log(newValue, objectId)
+  }
+
 }
 

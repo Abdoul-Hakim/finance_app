@@ -1,5 +1,5 @@
 export enum IncomeType {
-  salary = 1,
-  pedium = 2,
-  savings = 3
+  salary = 0,
+  pedium = 1,
+  savings = 2
 };
