@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Income } from '../interfaces/Income';
 import { TestIncome } from 'test/data';
+import { Income } from '../interfaces/Income';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +41,11 @@ export class IncomeService {
 
   getIncome() {
 
+  }
+
+  createIncome(newIncome: Income) {
+    const list = this.currentIncome.value;
+    list.push(newIncome);
+    this.currentIncome.next(list);
   }
 }

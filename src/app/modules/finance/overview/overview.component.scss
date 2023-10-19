@@ -1,7 +1,14 @@
+:host {
+  height: 100vh;
+  width: 100vw;
+}
+
+.mh-600 {
+  max-height: 600px;
+}
+
 .overlay {
-  position: absolute;
   top: 0;
-  background-color: gray;
   height: 100vh;
   width: 100vw;
 }

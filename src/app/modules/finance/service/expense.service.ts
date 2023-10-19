@@ -18,7 +18,6 @@ export class ExpenseService {
       // filter data by range
       .filter((obj) => {
         let result: boolean = false;
-        console.log(obj)
         if (tBegin === 0 ||
         (tBegin > 0 && tBegin <= obj.tCreated)) {
           result = true;
@@ -33,10 +32,16 @@ export class ExpenseService {
         }
         return result;
       })
-      // sum oll values
+      // sum all values
       .reduce((accumulator, currentValue: Expense) =>
         accumulator + currentValue.value, 0
       ));
 
+  }
+
+  createExpense(newExpense: Expense) {
+    const list = this.currentExpense.value;
+    list.push(newExpense);
+    this.currentExpense.next(list);
   }
 }
